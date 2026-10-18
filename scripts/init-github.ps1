@@ -23,10 +23,11 @@ $targets = @(
 foreach ($relative in $targets) {
   $path = Join-Path $root $relative
   if (-not (Test-Path -LiteralPath $path)) { continue }
-  $content = Get-Content -LiteralPath $path -Raw
+  $utf8 = New-Object System.Text.UTF8Encoding($false)
+  $content = [System.IO.File]::ReadAllText($path, $utf8)
   if ($content.Contains($old)) {
     $content = $content.Replace($old, $slug)
-    Set-Content -LiteralPath $path -Value $content -NoNewline -Encoding utf8
+    [System.IO.File]::WriteAllText($path, $content, $utf8)
     Write-Output "Updated $relative"
   }
 }

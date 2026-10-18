@@ -1,59 +1,75 @@
-﻿# DSH Desktop Companion
+# DSH Desktop Companion
 
 [![CI](https://github.com/k2ct/DSHCompanion/actions/workflows/ci.yml/badge.svg)](https://github.com/k2ct/DSHCompanion/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Platform: Windows](https://img.shields.io/badge/platform-Windows-0078D6)](https://www.microsoft.com/windows)
 
-涓€涓敱 DeepSeek Harness锛圖SH锛塒lugin 鑷姩鎵樼鐨?Windows 鍘熺敓妗岄潰浼翠荆锛屾妸 **浣欓鎮诞鐞冦€佸儚绱犳瀹犲拰 DSH 瀵硅瘽** 鍚堝苟鍒板悓涓€涓?Tauri 搴旂敤涓€傚畠閫氳繃 ACP stdio 涓?DSH 閫氫俊锛屼笉瑕佹眰鎵撳紑 DSH 缃戦〉绔€?
-> 椤圭洰澶勪簬 `0.1.0` 棰勫彂甯冮樁娈点€傛牳蹇冮摼璺凡缁忓彲鐢ㄥ苟鏈夎嚜鍔ㄥ寲娴嬭瘯锛屼絾瀹夎绋嬪簭銆佽瑙夎祫浜у拰涓嶅悓鏈哄櫒涓婄殑鍏煎鎬т粛闇€缁х画楠岃瘉銆?
-## 鍔熻兘
+一个由 DeepSeek Harness（DSH）Plugin 自动托管的 Windows 原生桌面伴侣，把 **余额悬浮球、像素桌宠和 DSH 对话** 合并到同一个 Tauri 应用中。它通过 ACP stdio 与 DSH 通信，不要求打开 DSH 网页端。
 
-- 妗屽疇銆佷綑棰濈悆銆佽亰澶╀笁绉嶆樉绀烘ā寮?- 閫忔槑銆佺疆椤躲€佹棤杈规銆佽烦杩囦换鍔℃爮鐨勫師鐢熺獥鍙?- 鎵樼洏鏄剧ず銆侀殣钘忓拰閫€鍑?- 鐐瑰嚮绌块€忎笌鎭㈠浜や簰
-- DSH Plugin 鑷姩鍚姩鍜屽叧闂?Companion
-- ACP v1 NDJSON 闀挎湡杩炴帴鍜?Session 澶嶇敤
-- ACP 娴佸紡鏂囨湰浜嬩欢銆佸彇娑堝洖绛斿拰 Session 鎭㈠
-- DeepSeek 瀹樻柟 `/user/balance` 浣欓鏌ヨ
-- Windows Credential Manager 瀹夊叏淇濆瓨 DeepSeek API Key
-- 鍗曞疄渚嬨€佺敓鍛藉懆鏈熷拰瀛ゅ効杩涚▼鑷姩鍖栨祴璇?
-## 鏋舵瀯
+> 项目处于 `0.1.0` 预发布阶段。核心链路已经可用并有自动化测试，但安装程序、视觉资产和不同机器上的兼容性仍需继续验证。
+
+## 功能
+
+- 桌宠、余额球、聊天三种显示模式
+- 透明、置顶、无边框、跳过任务栏的原生窗口
+- 托盘显示、隐藏和退出
+- 点击穿透与恢复交互
+- DSH Plugin 自动启动和关闭 Companion
+- ACP v1 NDJSON 长期连接和 Session 复用
+- ACP 流式文本事件、取消回答和 Session 恢复
+- DeepSeek 官方 `/user/balance` 余额查询
+- Windows Credential Manager 安全保存 DeepSeek API Key
+- 单实例、生命周期和孤儿进程自动化测试
+
+## 架构
 
 ```text
 DSH Desktop / CLI runtime
-        鈹?        鈹?Cordis Plugin lifecycle
-        鈻?dsh-desktop-companion-plugin
-        鈹?        鈹?starts / stops
-        鈻?DSH Companion (Tauri 2)
-   鈹溾攢 transparent pet / orb / chat UI
-   鈹溾攢 Windows Credential Manager
-   鈹溾攢 DeepSeek official balance API
-   鈹斺攢 dsh --profile acp (stdio, ACP v1)
+        │
+        │ Cordis Plugin lifecycle
+        ▼
+dsh-desktop-companion-plugin
+        │
+        │ starts / stops
+        ▼
+DSH Companion (Tauri 2)
+   ├─ transparent pet / orb / chat UI
+   ├─ Windows Credential Manager
+   ├─ DeepSeek official balance API
+   └─ dsh --profile acp (stdio, ACP v1)
 ```
 
-Companion 涓嶄緷璧?DSH GUI 鐨勯殢鏈?localhost 绔彛鎴栫鏈?Electron IPC锛屼篃涓嶄細缁曡繃 DSH 鐨勫鎵瑰拰 Sandbox銆?
-## 褰撳墠鐘舵€?
-| 妯″潡 | 鐘舵€?|
+Companion 不依赖 DSH GUI 的随机 localhost 端口或私有 Electron IPC，也不会绕过 DSH 的审批和 Sandbox。
+
+## 当前状态
+
+| 模块 | 状态 |
 |---|---|
-| Tauri 鍘熺敓绐楀彛銆佹墭鐩樸€佸崟瀹炰緥 | 宸插疄鐜?|
-| 妗屽疇銆佷綑棰濈悆銆佽亰澶?UI | 宸插疄鐜板熀纭€鐗堟湰 |
-| Plugin 鑷姩鎵樼 | 宸插湪闅旂 profile 楠岃瘉 |
-| ACP 闀挎湡杩涚▼銆佹祦寮忎簨浠躲€佸彇娑?| 宸插疄鐜?|
-| ACP Session 鎸佷箙鍖栦笌鎭㈠ | 宸插疄鐜?|
-| Windows Credential Manager | 宸插疄鐜板苟瀹屾垚鍐欏叆/璇诲彇/鍒犻櫎鎺㈤拡 |
-| DeepSeek 瀹樻柟浣欓 | 宸插疄鐜帮紱鐪熷疄浣欓闇€瑕佺敤鎴疯嚜宸辩殑 API Key |
-| Release EXE / NSIS | 鍙敱鍙戝竷鑴氭湰鍜?CI 鏋勫缓 |
-| 澶?DPI銆佸鏄剧ず鍣ㄣ€佸姩鐢昏祫浜?| 寰呭畬鍠?|
+| Tauri 原生窗口、托盘、单实例 | 已实现 |
+| 桌宠、余额球、聊天 UI | 已实现基础版本 |
+| Plugin 自动托管 | 已在隔离 profile 验证 |
+| ACP 长期进程、流式事件、取消 | 已实现 |
+| ACP Session 持久化与恢复 | 已实现 |
+| Windows Credential Manager | 已实现并完成写入/读取/删除探针 |
+| DeepSeek 官方余额 | 已实现；真实余额需要用户自己的 API Key |
+| Release EXE / NSIS | 可由发布脚本和 CI 构建 |
+| 多 DPI、多显示器、动画资产 | 待完善 |
 
-璇︾粏璇佹嵁瑙?[`docs/m0-status.md`](docs/m0-status.md)銆?
-## 绯荤粺瑕佹眰
+详细证据见 [`docs/m0-status.md`](docs/m0-status.md)。
 
-- Windows 10 鎴?Windows 11锛坸64锛?- Microsoft Edge WebView2 Runtime
+## 系统要求
+
+- Windows 10 或 Windows 11（x64）
+- Microsoft Edge WebView2 Runtime
 - DeepSeek Harness `>=0.2.1-rc.2 <0.3.0`
-- 寮€鍙戠幆澧冿細
+- 开发环境：
   - Node.js 20+
   - pnpm 11
-  - Rust stable锛圡SVC target锛?  - Visual Studio 2022 Build Tools锛屽寘鍚?Desktop development with C++
+  - Rust stable（MSVC target）
+  - Visual Studio 2022 Build Tools，包含 Desktop development with C++
 
-## 蹇€熷紑濮嬶細寮€鍙?
+## 快速开始：开发
+
 ```powershell
 git clone https://github.com/k2ct/DSHCompanion.git
 cd DSHCompanion
@@ -63,139 +79,155 @@ pnpm test
 pnpm dev
 ```
 
-`pnpm dev` 鍚姩鐨勬槸 Tauri 寮€鍙戠獥鍙ｏ紝涓嶄細涓诲姩鎵撳紑 DSH Web profile銆侰ompanion 涓?DSH 鐨勫璇濋€氫俊浣跨敤锛?
+`pnpm dev` 启动的是 Tauri 开发窗口，不会主动打开 DSH Web profile。Companion 与 DSH 的对话通信使用：
+
 ```text
 dsh --profile acp
 ```
 
-### 鏋勫缓 Debug 鐗堟湰
+### 构建 Debug 版本
 
 ```powershell
 pnpm --filter @dsh-companion/app tauri build --debug --no-bundle
 ```
 
-### 鏋勫缓 GitHub Release 浜х墿
+### 构建 Release 产物
 
 ```powershell
-pwsh -File scripts/build-release.ps1 -Clean
+powershell -ExecutionPolicy Bypass -File scripts/build-release.ps1 -Clean
 ```
 
-浜х墿浼氱敓鎴愬埌琚?Git 蹇界暐鐨?`release/` 鐩綍锛屽寘鎷細
+产物会生成到被 Git 忽略的 `release/` 目录，包括：
 
 - Companion Release EXE
-- DSH Plugin 鍒嗗彂鐩綍鍜屽帇缂╁寘
-- NSIS 瀹夎绋嬪簭锛堟瀯寤虹幆澧冩敮鎸佹椂锛?- SHA-256 鏍￠獙鏂囦欢
+- DSH Plugin 分发目录和压缩包
+- NSIS 安装程序（构建环境支持时）
+- SHA-256 校验文件
 
-## 瀹夎 DSH Plugin
+## 安装 DSH Plugin
 
-姝ｅ紡 Release 鐨?Plugin 鍖呭唴搴斿寘鍚細
+正式 Release 的 Plugin 包内应包含：
 
 ```text
 dsh-desktop-companion-plugin/
-鈹溾攢 bin/dsh-companion.exe
-鈹溾攢 lib/index.js
-鈹溾攢 package.json
-鈹溾攢 cordis.patch.yml
-鈹溾攢 LICENSE
-鈹斺攢 THIRD_PARTY_NOTICES.md
+├─ bin/dsh-companion.exe
+├─ lib/index.js
+├─ package.json
+├─ cordis.patch.yml
+├─ README.md
+├─ LICENSE
+└─ THIRD_PARTY_NOTICES.md
 ```
 
-涓嬭浇骞惰В鍘?Release 鍚庯紝鍦?PowerShell 涓繍琛岋細
+下载并解压 Release 后，在 PowerShell 中运行：
 
 ```powershell
-pwsh -File scripts/install-plugin.ps1 -PackagePath .\dsh-desktop-companion-plugin
+powershell -ExecutionPolicy Bypass -File scripts/install-plugin.ps1 -PackagePath .\dsh-desktop-companion-plugin
 ```
 
-鍗歌浇锛?
+卸载：
+
 ```powershell
-pwsh -File scripts/uninstall-plugin.ps1
+powershell -ExecutionPolicy Bypass -File scripts/uninstall-plugin.ps1
 ```
 
-瀹夎鑴氭湰榛樿鐩爣鏄悕涓?`companion` 鐨勯潪淇濈暀 DSH profile銆傞櫎闈炰綘鏄庣‘浜嗚В DSH Desktop profile 鐨勭鐞嗘柟寮忥紝鍚﹀垯涓嶈閫氳繃 CLI 淇敼淇濈暀鐨?`desktop` profile銆?
-## 閰嶇疆 DeepSeek 浣欓
+安装脚本默认目标是名为 `companion` 的非保留 DSH profile。除非你明确了解 DSH Desktop profile 的管理方式，否则不要通过 CLI 修改保留的 `desktop` profile。
 
-鍦?Companion 涓偣鍑烩€滆缃?Key鈥濓紝杈撳叆 DeepSeek 瀹樻柟 API Key銆侹ey 浼氫繚瀛樺埌 Windows Credential Manager锛?
-- 涓嶅啓鍏?`.env` 鎴栭厤缃枃浠?- 涓嶈繑鍥炵粰 WebView
-- 涓嶈繘鍏ユ棩蹇?- 涓嶉殢 Git 鎴?Release 鍖呭垎鍙?
-浣欓鍙姹傚畼鏂瑰湴鍧€锛?
+## 配置 DeepSeek 余额
+
+在 Companion 中点击“设置 Key”，输入 DeepSeek 官方 API Key。Key 会保存到 Windows Credential Manager：
+
+- 不写入 `.env` 或配置文件
+- 不返回给 WebView
+- 不进入日志
+- 不随 Git 或 Release 包分发
+
+余额只请求官方地址：
+
 ```text
 GET https://api.deepseek.com/user/balance
 ```
 
-鏇村璇存槑瑙?[`docs/security.md`](docs/security.md)銆?
-## 楠岃瘉鍛戒护
+更多说明见 [`docs/security.md`](docs/security.md)。
+
+## 验证命令
 
 ```powershell
 pnpm check
 pnpm test
-pwsh -File scripts/check-environment.ps1
-pwsh -File scripts/probe-dsh-acp.ps1
-pwsh -File scripts/native-self-test.ps1
-pwsh -File scripts/smoke-native.ps1 -Iterations 20
+powershell -ExecutionPolicy Bypass -File scripts/check-environment.ps1
+powershell -ExecutionPolicy Bypass -File scripts/probe-dsh-acp.ps1
+powershell -ExecutionPolicy Bypass -File scripts/native-self-test.ps1
+powershell -ExecutionPolicy Bypass -File scripts/smoke-native.ps1 -Iterations 20
 ```
 
-杩欎簺鎺㈤拡涓嶈姹傚惎鍔?DSH Web profile銆?
-## 浠撳簱缁撴瀯
+这些探针不要求启动 DSH Web profile。
+
+## 仓库结构
 
 ```text
-apps/companion/          Tauri 妗岄潰搴旂敤
-packages/protocol/       Plugin / Companion 绋冲畾娑堟伅濂戠害
-packages/pet-state/      DSH 鐘舵€佸埌妗屽疇鐘舵€佺殑褰掍竴鍖栭€昏緫
+apps/companion/          Tauri 桌面应用
+packages/protocol/       Plugin / Companion 稳定消息契约
+packages/pet-state/      DSH 状态到桌宠状态的归一化逻辑
 plugins/dsh-companion/   DSH Cordis Plugin
-scripts/                 鏋勫缓銆佸畨瑁呭拰娴嬭瘯鑴氭湰
-docs/                    鏋舵瀯銆佸畨鍏ㄥ拰楠岃瘉璇佹嵁
-.github/                  CI銆両ssue 鍜?PR 妯℃澘
+scripts/                 构建、安装和测试脚本
+docs/                    架构、安全和验证证据
+.github/                 CI、Issue 和 PR 模板
 ```
 
-## 瀹夊叏鍘熷垯
+## 安全原则
 
-- 涓嶈鍙栨祻瑙堝櫒 Cookie锛屼笉浣跨敤 DeepSeek 绉佹湁 Web 鎺ュ彛
-- API Key 浠呯敱 Rust 鍚庣鍜?Windows Credential Manager 澶勭悊
-- Companion 涓嶇粫杩?DSH 瀹℃壒鎴?Sandbox
-- ACP 浣跨敤 stdio锛屼笉瀵瑰鐩戝惉鎺у埗绔彛
-- 鏃ュ織涓嶅緱鍖呭惈 Bearer Token銆丆ookie 鎴栧嚟鎹?
-鍙戠幇瀹夊叏闂璇烽槄璇?[`SECURITY.md`](SECURITY.md)锛屼笉瑕佸湪鍏紑 Issue 涓彁浜ょ瀵嗘垨婕忔礊鍒╃敤缁嗚妭銆?
-## 寮€婧愪笌璐＄尞
+- 不读取浏览器 Cookie，不使用 DeepSeek 私有 Web 接口
+- API Key 仅由 Rust 后端和 Windows Credential Manager 处理
+- Companion 不绕过 DSH 审批或 Sandbox
+- ACP 使用 stdio，不对外监听控制端口
+- 日志不得包含 Bearer Token、Cookie 或凭据
 
-- License锛歁IT锛岃 [`LICENSE`](LICENSE)
-- 璐＄尞鎸囧崡锛歔`CONTRIBUTING.md`](CONTRIBUTING.md)
-- 琛屼负鍑嗗垯锛歔`CODE_OF_CONDUCT.md`](CODE_OF_CONDUCT.md)
-- 鍙樻洿璁板綍锛歔`CHANGELOG.md`](CHANGELOG.md)
-- 绗笁鏂硅鏄庯細[`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md)
+发现安全问题请阅读 [`SECURITY.md`](SECURITY.md)，不要在公开 Issue 中提交秘密或漏洞利用细节。
 
-椤圭洰鍊熼壌浜嗚嫢骞插紑婧愭瀹犲拰 DSH 闆嗘垚椤圭洰鐨勬灦鏋勬€濊矾锛屼絾褰撳墠娌℃湁澶嶅埗鍏舵簮浠ｇ爜鎴栫編鏈祫浜с€傜簿纭竟鐣岃褰曞湪绗笁鏂硅鏄庝腑銆?
-## 鍙戝竷鍒?GitHub
+## 开源与贡献
 
-1. 鍦?GitHub 鍒涘缓绌轰粨搴擄紙涓嶈鍒濆鍖?README銆乣.gitignore` 鎴?License锛夈€?2. 灏嗗崰浣嶉摼鎺ユ浛鎹负浣犵殑瀹為檯鐢ㄦ埛鍚嶆垨缁勭粐鍚嶏細
+- License：MIT，见 [`LICENSE`](LICENSE)
+- 贡献指南：[`CONTRIBUTING.md`](CONTRIBUTING.md)
+- 行为准则：[`CODE_OF_CONDUCT.md`](CODE_OF_CONDUCT.md)
+- 变更记录：[`CHANGELOG.md`](CHANGELOG.md)
+- 第三方说明：[`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md)
+
+项目借鉴了若干开源桌宠和 DSH 集成项目的架构思路，但当前没有复制其源代码或美术资产。精确边界记录在第三方说明中。
+
+## 发布到 GitHub
+
+1. 在 GitHub 创建空仓库（不要初始化 README、`.gitignore` 或 License）。
+2. 将占位链接替换为实际用户名或组织名：
 
 ```powershell
-pwsh -File scripts/init-github.ps1 -Owner <浣犵殑GitHub鐢ㄦ埛鍚? -SetRemote
+powershell -ExecutionPolicy Bypass -File scripts/init-github.ps1 -Owner <你的GitHub用户名> -SetRemote
 ```
 
-3. 杩愯瀹屾暣鍙戝竷棰勬锛?
+3. 运行发布预检：
+
 ```powershell
-pwsh -File scripts/preflight-release.ps1
+powershell -ExecutionPolicy Bypass -File scripts/preflight-release.ps1 -SkipReleaseBuild
 ```
 
-4. 棣栨鎻愪氦骞舵帹閫侊細
+4. 首次推送：
 
 ```powershell
-git add -A
-git status --short
-git commit -m "feat: initial DSH Desktop Companion release"
 git push -u origin main
 ```
 
-5. 鍒涘缓鐗堟湰鏍囩瑙﹀彂 Release 宸ヤ綔娴侊細
+5. 创建版本标签触发 Release 工作流：
 
 ```powershell
 git tag v0.1.0
 git push origin v0.1.0
 ```
 
-CI 浼氭墽琛?TypeScript/Vite 妫€鏌ャ€丯ode 娴嬭瘯銆丷ust 鏍煎紡鍜屾祴璇曪紱鏍囩鍙戝竷浼氭瀯寤?EXE銆丯SIS 瀹夎绋嬪簭銆丳lugin 鍖呬笌 `SHA256SUMS.txt`銆?
-鍙戝竷鍚庡缓璁湪浠撳簱璁剧疆涓惎鐢細
+CI 会执行 TypeScript/Vite 检查、Node 测试、Rust 格式和测试；标签发布会构建 EXE、NSIS 安装程序、Plugin 包与 `SHA256SUMS.txt`。
 
-- Branch protection锛堣姹?CI 閫氳繃锛?- Secret scanning 涓?push protection
+发布后建议在仓库设置中启用：
+
+- Branch protection（要求 CI 通过）
+- Secret scanning 与 push protection
 - Private vulnerability reporting
 - Dependabot alerts

@@ -22,8 +22,8 @@ pnpm test
 原生验证：
 
 ```powershell
-pwsh -File scripts/native-self-test.ps1
-pwsh -File scripts/smoke-native.ps1 -Iterations 5
+powershell -ExecutionPolicy Bypass -File scripts/native-self-test.ps1
+powershell -ExecutionPolicy Bypass -File scripts/smoke-native.ps1 -Iterations 5
 ```
 
 ## 提交约定
@@ -57,7 +57,7 @@ pwsh -File scripts/smoke-native.ps1 -Iterations 5
 ## Pull Request 检查
 
 ```powershell
-pwsh -File scripts/preflight-release.ps1 -SkipReleaseBuild
+powershell -ExecutionPolicy Bypass -File scripts/preflight-release.ps1 -SkipReleaseBuild
 ```
 
 提交 PR 即表示你有权按项目 MIT License 提交这些改动。
