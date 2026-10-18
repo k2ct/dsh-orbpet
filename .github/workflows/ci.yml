@@ -1,0 +1,43 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: windows-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11.28.5
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: x86_64-pc-windows-msvc
+          components: rustfmt
+      - name: Install JavaScript dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Check TypeScript and frontend build
+        run: pnpm check
+      - name: Run workspace tests
+        run: pnpm test
+      - name: Check Rust formatting
+        working-directory: apps/companion/src-tauri
+        run: cargo fmt -- --check
+      - name: Run Rust tests
+        working-directory: apps/companion/src-tauri
+        run: cargo test --locked
+      - name: Check release compilation
+        working-directory: apps/companion/src-tauri
+        run: cargo check --release --locked

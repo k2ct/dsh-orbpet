@@ -1,0 +1,5 @@
+# M0 bundle patch. The final plugin id/name will be verified against the
+# installed DSH profile before an installation test.
+- insert:
+    - id: dsh-desktop-companion
+      name: dsh-desktop-companion-plugin

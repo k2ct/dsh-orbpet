@@ -1,0 +1,33 @@
+name: Feature request
+description: Suggest an improvement for the desktop companion
+title: "[Feature]: "
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem or use case
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed solution
+    validations:
+      required: true
+  - type: textarea
+    id: security
+    attributes:
+      label: Security, approval, credential, or licensing impact
+      description: Explain whether this changes DSH approvals, credential handling, network access, or introduces assets/code.
+    validations:
+      required: true
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checklist
+      options:
+        - label: This proposal does not intentionally bypass DSH approvals or sandbox controls.
+          required: true
+        - label: I described the source and license of any proposed assets or dependencies.
+          required: true

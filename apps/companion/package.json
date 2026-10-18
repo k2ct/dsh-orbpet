@@ -1,0 +1,23 @@
+{
+  "name": "@dsh-companion/app",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build:web": "vite build",
+    "tauri": "tauri",
+    "check": "tsc --noEmit && vite build",
+    "test": "tsx --test test/*.test.ts"
+  },
+  "dependencies": {
+    "@dsh-companion/protocol": "workspace:*",
+    "@tauri-apps/api": "^2.8.0"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "^2.8.4",
+    "tsx": "^4.21.0",
+    "typescript": "^5.7.3",
+    "vite": "^6.1.0"
+  }
+}
