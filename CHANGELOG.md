@@ -1,4 +1,4 @@
-﻿# Changelog
+# Changelog
 
 All notable changes to this project will be documented in this file. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the project intends to use [Semantic Versioning](https://semver.org/).
 
@@ -25,5 +25,5 @@ All notable changes to this project will be documented in this file. The format 
 - Official DeepSeek `/user/balance` integration.
 - Rust, TypeScript, Plugin, state reducer and native lifecycle tests.
 
-[Unreleased]: https://github.com/k2ct/DSHCompanion/compare/v0.1.0...HEAD
-[0.1.0]: https://github.com/k2ct/DSHCompanion/releases/tag/v0.1.0
+[Unreleased]: https://github.com/k2ct/dsh-orbpet/compare/v0.1.0...HEAD
+[0.1.0]: https://github.com/k2ct/dsh-orbpet/releases/tag/v0.1.0

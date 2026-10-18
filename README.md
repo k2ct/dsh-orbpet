@@ -1,6 +1,6 @@
 # DSH Desktop Companion
 
-[![CI](https://github.com/k2ct/DSHCompanion/actions/workflows/ci.yml/badge.svg)](https://github.com/k2ct/DSHCompanion/actions/workflows/ci.yml)
+[![CI](https://github.com/k2ct/dsh-orbpet/actions/workflows/ci.yml/badge.svg)](https://github.com/k2ct/dsh-orbpet/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Platform: Windows](https://img.shields.io/badge/platform-Windows-0078D6)](https://www.microsoft.com/windows)
 
@@ -71,8 +71,8 @@ Companion 不依赖 DSH GUI 的随机 localhost 端口或私有 Electron IPC，�
 ## 快速开始：开发
 
 ```powershell
-git clone https://github.com/k2ct/DSHCompanion.git
-cd DSHCompanion
+git clone https://github.com/k2ct/dsh-orbpet.git
+cd dsh-orbpet
 pnpm install --frozen-lockfile
 pnpm check
 pnpm test
@@ -201,7 +201,7 @@ docs/                    架构、安全和验证证据
 2. 将占位链接替换为实际用户名或组织名：
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File scripts/init-github.ps1 -Owner <你的GitHub用户名> -SetRemote
+powershell -ExecutionPolicy Bypass -File scripts/init-github.ps1 -Owner <你的GitHub用户名> -Repository dsh-orbpet -SetRemote
 ```
 
 3. 运行发布预检：

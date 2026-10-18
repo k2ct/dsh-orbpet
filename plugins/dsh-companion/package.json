@@ -10,6 +10,12 @@
   },
   "description": "DSH host plugin that supervises the DSH Desktop Companion process.",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/k2ct/dsh-orbpet.git",
+    "directory": "plugins/dsh-companion"
+  },
+  "homepage": "https://github.com/k2ct/dsh-orbpet#readme",
   "files": [
     "bin/dsh-companion.exe",
     "lib/",
