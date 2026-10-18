@@ -1,6 +1,6 @@
 param([string]$Profile = 'companion')
 
-$ErrorActionPreference = 'Stop'
+$ErrorActionPreference = 'Continue'
 $defaultDsh = Join-Path $env:LOCALAPPDATA 'Programs\DeepSeek Harness\resources\runtime\cli\bin\dsh.cmd'
 $dsh = if ($env:DSH_CLI_PATH) { $env:DSH_CLI_PATH } elseif (Get-Command dsh -ErrorAction SilentlyContinue) { (Get-Command dsh).Source } else { $defaultDsh }
 if (-not (Test-Path -LiteralPath $dsh)) { throw "DSH launcher not found: $dsh" }

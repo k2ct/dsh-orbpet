@@ -4,7 +4,7 @@ param(
   [string]$Profile = 'companion'
 )
 
-$ErrorActionPreference = 'Stop'
+$ErrorActionPreference = 'Continue'
 $resolvedPackage = (Resolve-Path -LiteralPath $PackagePath).Path
 if (-not (Test-Path -LiteralPath (Join-Path $resolvedPackage 'package.json'))) {
   throw "Plugin package.json not found under $resolvedPackage"

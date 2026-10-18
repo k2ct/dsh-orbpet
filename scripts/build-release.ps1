@@ -11,6 +11,19 @@ $pluginSource = Join-Path $root 'plugins\dsh-companion'
 $pluginStage = Join-Path $release 'dsh-desktop-companion-plugin'
 $exe = Join-Path $tauriRoot 'target\release\dsh-companion.exe'
 
+function Invoke-Native {
+  param([scriptblock]$Command, [string]$FailureMessage)
+  $previous = $ErrorActionPreference
+  $ErrorActionPreference = 'Continue'
+  try {
+    & $Command
+    $exitCode = $LASTEXITCODE
+  } finally {
+    $ErrorActionPreference = $previous
+  }
+  if ($exitCode -ne 0) { throw "$FailureMessage (exit code $exitCode)" }
+}
+
 if ($Clean -and (Test-Path -LiteralPath $release)) {
   $resolved = (Resolve-Path -LiteralPath $release).Path
   if ($resolved -ne (Join-Path $root 'release')) { throw "Refusing to delete unexpected path: $resolved" }
@@ -24,17 +37,12 @@ if (-not $node -or -not $pnpm) { throw 'Node.js and pnpm must be available on PA
 
 Push-Location $root
 try {
-  & $pnpm install --frozen-lockfile
-  if ($LASTEXITCODE -ne 0) { throw 'pnpm install failed' }
-  & $pnpm check
-  if ($LASTEXITCODE -ne 0) { throw 'pnpm check failed' }
-  & $pnpm test
-  if ($LASTEXITCODE -ne 0) { throw 'pnpm test failed' }
-  & $pnpm --filter '@dsh-companion/app' tauri build --no-bundle
-  if ($LASTEXITCODE -ne 0) { throw 'Tauri release executable build failed' }
+  Invoke-Native { & $pnpm install --frozen-lockfile } 'pnpm install failed'
+  Invoke-Native { & $pnpm check } 'pnpm check failed'
+  Invoke-Native { & $pnpm test } 'pnpm test failed'
+  Invoke-Native { & $pnpm --filter '@dsh-companion/app' tauri build --no-bundle } 'Tauri release executable build failed'
   if (-not $SkipInstaller) {
-    & $pnpm --filter '@dsh-companion/app' tauri build
-    if ($LASTEXITCODE -ne 0) { throw 'Tauri installer build failed' }
+    Invoke-Native { & $pnpm --filter '@dsh-companion/app' tauri build } 'Tauri installer build failed'
   }
 } finally {
   Pop-Location
@@ -50,8 +58,17 @@ Copy-Item -LiteralPath (Join-Path $pluginSource 'README.md') -Destination $plugi
 Copy-Item -LiteralPath (Join-Path $root 'LICENSE') -Destination $pluginStage -Force
 Copy-Item -LiteralPath (Join-Path $root 'THIRD_PARTY_NOTICES.md') -Destination $pluginStage -Force
 
+$requiredStaged = @(
+  'bin\dsh-companion.exe','lib\index.js','package.json','cordis.patch.yml',
+  'README.md','LICENSE','THIRD_PARTY_NOTICES.md'
+)
+foreach ($relative in $requiredStaged) {
+  if (-not (Test-Path -LiteralPath (Join-Path $pluginStage $relative))) { throw "Plugin package is missing $relative" }
+}
+
 $pluginZip = Join-Path $release 'dsh-desktop-companion-plugin-windows-x64.zip'
 Compress-Archive -Path $pluginStage -DestinationPath $pluginZip -Force
+if (-not (Test-Path -LiteralPath $pluginZip)) { throw 'Plugin archive was not created' }
 
 $bundleDir = Join-Path $tauriRoot 'target\release\bundle'
 if (Test-Path -LiteralPath $bundleDir) {
