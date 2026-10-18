@@ -57,6 +57,42 @@ Companion 不依赖 DSH GUI 的随机 localhost 端口或私有 Electron IPC，�
 
 详细证据见 [`docs/m0-status.md`](docs/m0-status.md)。
 
+## 深入学习与继续开发
+
+| 文档 | 内容 |
+|---|---|
+| [`docs/code-map.md`](docs/code-map.md) | 每个目录、每个文件的作用与修改指南 |
+| [`docs/startup-flow.md`](docs/startup-flow.md) | 从 EXE 启动到显示桌宠的完整调用链 |
+| [`docs/architecture.md`](docs/architecture.md) | 三个进程的分工与稳定边界 |
+| [`docs/acp.md`](docs/acp.md) | ACP v1 协议与会话生命周期 |
+| [`docs/security.md`](docs/security.md) | 信任边界与凭据策略 |
+| [`docs/README.md`](docs/README.md) | 文档索引与新电脑开发准备 |
+
+在新电脑上继续开发的最短路径：
+
+```powershell
+git clone https://github.com/k2ct/dsh-orbpet.git
+cd dsh-orbpet
+pnpm install --frozen-lockfile
+pnpm check
+pnpm test
+pnpm dev
+```
+
+若本机没有全局 Node/pnpm，可临时加入 PATH：
+
+```powershell
+$env:PATH = "C:\path\to\node\bin;$env:PATH"
+```
+
+本机构建 Release 还需要 MSVC 环境与 Cargo：
+
+```powershell
+& "C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\Common7\Tools\Launch-VsDevShell.ps1" -Arch amd64 -HostArch amd64
+$env:PATH = "C:\Users\<you>\.cargo\bin;$env:PATH"
+powershell -ExecutionPolicy Bypass -File scripts\build-release.ps1 -Clean
+```
+
 ## 系统要求
 
 - Windows 10 或 Windows 11（x64）

@@ -9,6 +9,7 @@ All notable changes to this project will be documented in this file. The format 
 - GitHub Actions CI and release workflow.
 - Repository contribution, security, conduct, Issue and PR templates.
 - Release staging, checksum, Plugin install and uninstall scripts.
+- Documentation: code map, startup flow and new-machine development guide.
 
 ## [0.1.0] - Pending first public release
 
