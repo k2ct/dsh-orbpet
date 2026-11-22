@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "@dsh-companion/protocol": "workspace:*",
-    "@tauri-apps/api": "^2.8.0"
+    "@tauri-apps/api": "^2.12.5"
   },
   "devDependencies": {
     "@tauri-apps/cli": "^2.8.4",
